@@ -18,7 +18,7 @@ class Sokoban(gym.Env):
     self.oldTileUnderPlayerbefore = 1
     self.newTileUnderPlayerAfter = 0
     self.isFirstIter = True
-    self.episodeLength = 10
+    self.episodeLength = 0
     self.reward = 0
     self.stringNextState = ""
     self.stringNextState = ""
@@ -33,27 +33,29 @@ class Sokoban(gym.Env):
     return self.currentState
 
   def step(self, action): 
-
-      print("Current in main--------------------------------------")
       ac = self.actionMap[action]
       stringCurrentState = ','.join(map(str, self.currentState[0]))  
       self.stringCurrentState = stringCurrentState
-          
-      if (self.episodeLength > 10):
-        self.done = True
-      else:
-        # print("state", state)
-        next_state_integers = self.h.getNextStateDynamically(self.stringCurrentState, ac).reshape(1,25)
-        # print(self.h.getNextStateDynamically(stringCurrentState, ac))
-        self.stringNextState = ','.join(map(str, next_state_integers[0]))
-        # print("next string state is", stringNextState)
-        self.episodeLength += 1
-        reward = 0
-        if(self.stringNextState.strip() in self.rewardMap[0]):
-          self.reward = self.rewardMap[0][self.stringNextState]
+
+      print("Current state", self.currentState)
+      next_state_integers = self.h.getNextStateDynamically(self.stringCurrentState, ac).reshape(1,25)
+      self.currentState = next_state_integers
+      # print("Next satte",next_state_integers)
+
+      
+      # print(self.h.getNextStateDynamically(stringCurrentState, ac))
+      self.stringNextState = ','.join(map(str, next_state_integers[0]))
+      # print("next state", self.stringNextState)
+      self.episodeLength += 1
+      reward = 0
+      # print("String next is", self.stringNextState)
+      if(ac == 'up' or ac == 'down'):
+        if(self.stringNextState.strip() in self.rewardMap[0][ac]):
+          self.reward = self.rewardMap[0][ac][self.stringNextState]
           # print("Found a reward", reward)
-        else: 
-          # print("Reward not found", -1)
-          self.reward = -1
+      else: 
+        # print("Reward not found", -1)
+        self.reward = -1
+
       return self.stringNextState, self.reward, self.done, {}
 

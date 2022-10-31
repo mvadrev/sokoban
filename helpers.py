@@ -41,27 +41,27 @@ class Helpers():
 
 
   def isBoxNextToWall(self,list_of_integers_s, position_of_player_sPrime_row, position_of_player_sPrime_col, action):
-    print("Agent sPrime pos is", position_of_player_sPrime_row, position_of_player_sPrime_col)
+    # print("Agent sPrime pos is", position_of_player_sPrime_row, position_of_player_sPrime_col)
     if(action == 'down'):
-      print("Action is down")
+      # print("Action is down")
       position_of_box_sPrime_row = position_of_player_sPrime_row + 1
       position_of_box_sPrime_col = position_of_player_sPrime_col
-      print("Box location is", position_of_box_sPrime_row, position_of_box_sPrime_col)
+      # print("Box location is", position_of_box_sPrime_row, position_of_box_sPrime_col)
       boxDownWallCheck = list_of_integers_s[position_of_player_sPrime_row + 1][position_of_player_sPrime_col]
       self.NewBoxPos_oldValue = list_of_integers_s[position_of_player_sPrime_row + 1][position_of_player_sPrime_col]
-      print("Box wall check is", boxDownWallCheck)
+      # print("Box wall check is", boxDownWallCheck)
       if(boxDownWallCheck == 0):
         return True
       else:
         return False
     if(action == 'up'):
-      print("Action is up")
+      # print("Action is up")
       position_of_box_sPrime_row = position_of_player_sPrime_row - 1
       position_of_box_sPrime_col = position_of_player_sPrime_col
-      print("Box location is", position_of_box_sPrime_row, position_of_box_sPrime_col)
+      # print("Box location is", position_of_box_sPrime_row, position_of_box_sPrime_col)
       boxDownWallCheck = list_of_integers_s[position_of_player_sPrime_row - 1][position_of_player_sPrime_col]
       self.NewBoxPos_oldValue = list_of_integers_s[position_of_player_sPrime_row - 1][position_of_player_sPrime_col]
-      print("Box wall check is", boxDownWallCheck)
+      # print("Box wall check is", boxDownWallCheck)
       if(boxDownWallCheck == 0):
         return True
       else:
@@ -80,14 +80,14 @@ class Helpers():
         return False 
 
   def getNextStateDynamically(self, currentState: str, action: str):
-    print("Getting")
+    # print("Getting")
     position_of_player_sPrime_row = 0
     position_of_player_sPrime_col = 0
 
     list_of_integers_s = np.array(list(map(int, currentState.split(',')))).reshape(5,5)
     position_of_player_s = np.argwhere(np.array(list_of_integers_s == 5))
     
-    print(list_of_integers_s, position_of_player_s)
+    # print(list_of_integers_s, position_of_player_s)
 
     # Get s prime position sof player
     position_of_player_sPrime_row, position_of_player_sPrime_col = self.getPlayerSprime(action, position_of_player_s)
@@ -95,17 +95,17 @@ class Helpers():
     print("Running collision detection with walls")
     if(list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col]) == 0:
       # Hit a wall so return the same state as agent does not moove
-        print('Hit a wall',)
+        # print('Hit a wall',)
         return np.array(list(map(int, currentState.split(',')))).reshape(5,5)
      # Else there is freespace ahead to move   
     else:
        print("Freespace detected")
        # In first Iter the player always stands on a floor tile with value 1
        if(self.isFirstIter == True): 
-         print("This is 1st iter")
+        #  print("This is 1st iter")
          self.oldTileUnderPlayerbefore = 1
        else:
-          print("Not first iter")
+          pass
 
        self.newTileUnderPlayerAfter = list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col]
        print("Tile after player is", self.newTileUnderPlayerAfter)
