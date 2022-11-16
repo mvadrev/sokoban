@@ -36,7 +36,7 @@ class Helpers():
       list_of_integers_s[position_of_player_sPrime_row ][position_of_player_sPrime_col + 1] = 3 # Set new position of box
       return list_of_integers_s
     if(action == 'left'):
-      list_of_integers_s[position_of_player_sPrime_row + 1][position_of_player_sPrime_col - 1] = 3 # Set new position of box
+      list_of_integers_s[position_of_player_sPrime_row ][position_of_player_sPrime_col - 1] = 3 # Set new position of box
       return list_of_integers_s
 
 
@@ -80,11 +80,11 @@ class Helpers():
         return False 
 
   def getNextStateDynamically(self, currentState: str, action: str):
-    # print("Getting")
+    print("Getting")
     position_of_player_sPrime_row = 0
     position_of_player_sPrime_col = 0
 
-    list_of_integers_s = np.array(list(map(int, currentState.split(',')))).reshape(5,5)
+    list_of_integers_s = np.array(currentState).reshape(5,5)
     position_of_player_s = np.argwhere(np.array(list_of_integers_s == 5))
     
     # print(list_of_integers_s, position_of_player_s)
@@ -95,8 +95,8 @@ class Helpers():
     print("Running collision detection with walls")
     if(list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col]) == 0:
       # Hit a wall so return the same state as agent does not moove
-        # print('Hit a wall',)
-        return np.array(list(map(int, currentState.split(',')))).reshape(5,5)
+        print('Hit a walllllllllllll',)
+        return np.array(currentState).reshape(5,5)
      # Else there is freespace ahead to move   
     else:
        print("Freespace detected")
@@ -119,7 +119,7 @@ class Helpers():
          else: 
            # Update position of box
            new_list_integers = self.setNewPosOfBox(list_of_integers_s,position_of_player_sPrime_row, position_of_player_sPrime_col, action)
-           # print("New list is", new_list_integers)
+           print("New list is", new_list_integers)
            # Update position of player 
            self.newTileUnderPlayerAfter = new_list_integers[position_of_player_sPrime_row][position_of_player_sPrime_col] # backup of sprime of player
            new_list_integers[position_of_player_sPrime_row][position_of_player_sPrime_col] = 5 # Set new player position

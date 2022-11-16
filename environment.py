@@ -3,15 +3,19 @@ from gym import spaces
 import numpy as np
 from transition import reward 
 import helpers
+import pickle
+import copy
+
 
 class Sokoban(gym.Env):
   def __init__(self):
-    self.map = [0,0,0,0,0,0,5,1,2,0,0,3,1,3,0,0,2,1,1,0,0,0,0,0,0]
-    self.currentState = np.array(self.map, dtype='int').reshape(1,25)
+    self.map = [0,0,0,0,0,0,2,3,1,0,0,1,1,1,0,0,1,1,5,0,0,0,0,0,0]
 
+    self.currentState = self.map
     self.done = False
-    self.rewardMap = reward
-
+    self.rewardMap = [ [0,0,0,0,0,0,3,5,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0]  ]
+    self.rewards = [10]
+    self.episodeLength = 0
     self.action_space = spaces.Discrete(4)
     self.actionMap = {0: 'left', 1: 'right', 2: 'up', 3: 'down'}
     self.observation_space = spaces.Box(0, 5, shape=(1,25), dtype='int')
@@ -28,34 +32,31 @@ class Sokoban(gym.Env):
     super(Sokoban, self).__init__()
 
   def reset(self):
-    self.currentState = np.array(self.map, dtype='int').reshape(1,25)
+    self.episodeLength = 0
+    self.currentState = np.array(self.map, dtype='int').reshape(1,25).tolist()[0]
     self.done = False
     return self.currentState
 
   def step(self, action): 
-      ac = self.actionMap[action]
-      stringCurrentState = ','.join(map(str, self.currentState[0]))  
-      self.stringCurrentState = stringCurrentState
-
-      print("Current state", self.currentState)
-      next_state_integers = self.h.getNextStateDynamically(self.stringCurrentState, ac).reshape(1,25)
-      self.currentState = next_state_integers
-      # print("Next satte",next_state_integers)
-
-      
-      # print(self.h.getNextStateDynamically(stringCurrentState, ac))
-      self.stringNextState = ','.join(map(str, next_state_integers[0]))
-      # print("next state", self.stringNextState)
       self.episodeLength += 1
-      reward = 0
-      # print("String next is", self.stringNextState)
-      if(ac == 'up' or ac == 'down'):
-        if(self.stringNextState.strip() in self.rewardMap[0][ac]):
-          self.reward = self.rewardMap[0][ac][self.stringNextState]
-          # print("Found a reward", reward)
-      else: 
-        # print("Reward not found", -1)
-        self.reward = -1
+      while (self.done == False):
+        ac = self.actionMap[action]
 
-      return self.stringNextState, self.reward, self.done, {}
+        next_state_integers = self.h.getNextStateDynamically(np.array(self.currentState), ac).reshape(1,25).tolist()[0]
+
+        self.currentState = next_state_integers
+        
+
+        self.episodeLength += 1
+        reward = 0
+        # print("String next is", self.stringNextState)
+        if(next_state_integers in self.rewardMap):
+          index = self.rewardMap.index(next_state_integers)
+          reward = self.rewards[index]
+          return next_state_integers, reward, self.done, {}
+
+        else:           
+          return next_state_integers, -1, self.done, {}
+
+        
 
