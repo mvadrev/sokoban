@@ -1,7 +1,9 @@
 import environment 
 import numpy as np
 from Qlearn import QLearning
-import pickle
+from semigradsarsa import SemiGradientSarsa
+
+
 if __name__ == "__main__":
     
     # Initialize environment
@@ -12,14 +14,20 @@ if __name__ == "__main__":
     # next_state , reward, dones,meta = env.step(3)
     # print("lll",next_state, reward)
     # print("Current",env.reset())
-    # n, r, m, c  = env.step(0)
-    # print("Reward is", n, r, m, c)
+    # for i in range(11):
+    #     n, r, m, c  = env.step(0)
+    #     print("Reward is", n, r, m, c)
     # print(n)
     ql = QLearning(env)
-    # # state = '0,0,0,0,0,0,5,1,2,0,0,3,1,3,0,0,2,1,1,0,0,0,0,0,0'
-    # # action = ql.epsilonGreedy(state)
-    # print("Action to take is:", actionMap[action])
-    ql.learn(10)
+    # # # state = '0,0,0,0,0,0,5,1,2,0,0,3,1,3,0,0,2,1,1,0,0,0,0,0,0'
+    # # # action = ql.epsilonGreedy(state)
+    # # print("Action to take is:", actionMap[action])
+    ql.learn(100)
+    # # print(ql.stateTable)
+    # ql.predict()
+
+    # s = SemiGradientSarsa(env, 1e-5, 0.5)
+    # s.train(2)
 
     # model = {}
     # with open ('C:\\Users\\mvadr\OneDrive\\Desktop\\asn1 RL\\Sokoban\\mode.pkl','rb') as pick:

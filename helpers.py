@@ -26,17 +26,24 @@ class Helpers():
     return position_of_player_sPrime_row, position_of_player_sPrime_col
 
   def setNewPosOfBox(self, list_of_integers_s ,position_of_player_sPrime_row, position_of_player_sPrime_col, action):
+
+    pos_box = np.argwhere(list_of_integers_s == 3)
+
     if(action == 'down'):
       list_of_integers_s[position_of_player_sPrime_row + 1][position_of_player_sPrime_col] = 3 # Set new position of box
+      list_of_integers_s[pos_box[0][0]][pos_box[0][1]] = 1
       return list_of_integers_s
     if(action == 'up'):
       list_of_integers_s[position_of_player_sPrime_row - 1][position_of_player_sPrime_col] = 3 # Set new position of box
+      list_of_integers_s[pos_box[0][0]][pos_box[0][1]] = 1
       return list_of_integers_s
     if(action == 'right'):
       list_of_integers_s[position_of_player_sPrime_row ][position_of_player_sPrime_col + 1] = 3 # Set new position of box
+      list_of_integers_s[pos_box[0][0]][pos_box[0][1]] = 1
       return list_of_integers_s
     if(action == 'left'):
       list_of_integers_s[position_of_player_sPrime_row ][position_of_player_sPrime_col - 1] = 3 # Set new position of box
+      list_of_integers_s[pos_box[0][0]][pos_box[0][1]] = 1
       return list_of_integers_s
 
 
@@ -78,14 +85,27 @@ class Helpers():
         return True
       else:
         return False 
+    if(action == 'left'):
+      print("Action is left")
+      position_of_box_sPrime_row = position_of_player_sPrime_row 
+      position_of_box_sPrime_col = position_of_player_sPrime_col - 1
+      print("Box location is", position_of_box_sPrime_row, position_of_box_sPrime_col)
+      boxDownWallCheck = list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col - 1]
+      self.NewBoxPos_oldValue = list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col - 1]
+      print("Box wall check is", boxDownWallCheck)
+      if(boxDownWallCheck == 0):
+        return True
+      else:
+        return False 
 
-  def getNextStateDynamically(self, currentState: str, action: str):
+  def getNextStateDynamically(self, list_of_integers_s, action):
     print("Getting")
     position_of_player_sPrime_row = 0
     position_of_player_sPrime_col = 0
 
-    list_of_integers_s = np.array(currentState).reshape(5,5)
+   
     position_of_player_s = np.argwhere(np.array(list_of_integers_s == 5))
+    print("Player pos is", position_of_player_s)
     
     # print(list_of_integers_s, position_of_player_s)
 
@@ -96,7 +116,7 @@ class Helpers():
     if(list_of_integers_s[position_of_player_sPrime_row][position_of_player_sPrime_col]) == 0:
       # Hit a wall so return the same state as agent does not moove
         print('Hit a walllllllllllll',)
-        return np.array(currentState).reshape(5,5)
+        return np.array(list_of_integers_s)
      # Else there is freespace ahead to move   
     else:
        print("Freespace detected")
@@ -119,7 +139,7 @@ class Helpers():
          else: 
            # Update position of box
            new_list_integers = self.setNewPosOfBox(list_of_integers_s,position_of_player_sPrime_row, position_of_player_sPrime_col, action)
-           print("New list is", new_list_integers)
+          #  print("New list is", new_list_integers)
            # Update position of player 
            self.newTileUnderPlayerAfter = new_list_integers[position_of_player_sPrime_row][position_of_player_sPrime_col] # backup of sprime of player
            new_list_integers[position_of_player_sPrime_row][position_of_player_sPrime_col] = 5 # Set new player position
