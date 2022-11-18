@@ -12,8 +12,8 @@ class QLearning():
     self.stateTable = []
     self.qtable = []
     self.epsilon = 0.1
-    self.alpha = 0.0001
-    self.gamma = 0.8
+    self.alpha = 0.1
+    self.gamma = 0.9
     self.timesteps = 1000
     self.env = env
     self.terminalState = [[0,0,0,0,0],
@@ -93,21 +93,25 @@ class QLearning():
         Q_old = self.qtable[indexOfS][action_selection_index]
         Q = self.getNewQ(Q_old, reward, maxQ)
 
-    
+       
         self.qtable[indexOfS][action_selection_index] = Q
         # print(self.qtable)
         if(self.isTerminalState(next_state2)):
           print("reached termainal ------------------------------------", self.qtable)
           print("reached termainal ------------------------------------", self.stateTable)
-          break
 
           done = True
           self.env.done = False
-      self.valueEvolution.append(self.qtable[-1][1])    
-    x = np.arange(0, timesteps)
-    y = self.valueEvolution
+      acs = self.qtable[1]
+      ind = np.argmax(acs)
+      self.valueEvolution.append(self.qtable[1][ind])  
+      print(self.valueEvolution)
+    # # x axis is time steps    
+    x = np.arange(0, timesteps).tolist()
+    # y axis is evolution
+    y = self.valueEvolution    
     plt.plot(x,y)
-    plt.show()
+    plt.show()  
 
   def predict(self):
     self.env.reset()

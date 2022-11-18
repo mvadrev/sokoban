@@ -18,7 +18,7 @@ class Sokoban(gym.Env):
     #                          [0,0,0,0,0,0,2,3,5,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0]]
     self.map = [[0,0,0,0,0],
                 [0,2,3,1,0], 
-                [0,3,1,1,0],
+                [0,1,1,1,0],
                 [0,1,1,5,0],
                 [0,0,0,0,0]]
 
@@ -64,10 +64,10 @@ class Sokoban(gym.Env):
   def step(self, action): 
       self.episodeLength = self.episodeLength + 1
       if(self.episodeLength == 35):
-        print("Completed 10 timesteps so resetting game ..")
+        print("Completed 50 timesteps so resetting game ..")
         state_copy = self.reset()
-        
-        return state_copy, -10, True, {}
+        self.reset()
+        return state_copy, 0, False, {}
       else:
        while (self.done == False):
           self.isFirstIter = False
@@ -82,6 +82,7 @@ class Sokoban(gym.Env):
           if(np.array(next_state_integers) == np.array(self.rewardMap)).all():
             index = self.rewardMap.index(next_state_integers)
             reward = self.rewards[index]
+            self.reset()
             return next_state_integers, reward, self.done, {}
 
           else:           

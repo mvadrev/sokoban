@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # # # state = '0,0,0,0,0,0,5,1,2,0,0,3,1,3,0,0,2,1,1,0,0,0,0,0,0'
     # # # action = ql.epsilonGreedy(state)
     # # print("Action to take is:", actionMap[action])
-    ql.learn(100)
+    ql.learn(5000)
     # # print(ql.stateTable)
     # ql.predict()
 
